@@ -16,7 +16,14 @@ class bookcontroller extends Controller
     public function __construct(bookingRepository $booking ) {
         $this->booking = $booking;
     } 
+
     public function create(Request $request,$apartment){
 return  $this->booking->create($request,$apartment);
     }
+
+
+    public function index(){
+        return  $this->booking->index();
+    }
+
 }

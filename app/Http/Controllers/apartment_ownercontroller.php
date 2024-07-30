@@ -1,20 +1,21 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Validator;
+
 use App\Api\ApiResponse;
-use App\Models\User;
+use App\Models\Apartment_Owner;
 use Illuminate\Validation\Rules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-class AuthController extends Controller
+use Illuminate\Support\Facades\Validator;
+class apartment_ownercontroller extends Controller
 {
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'email', 'max:255', 'unique:' . Apartment_Owner::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ], [], [
             'name' => 'Name',
@@ -26,12 +27,12 @@ class AuthController extends Controller
             return ApiResponse::sendResponse(422, 'Register Validation Errors', $validator->messages()->all());
         }
 
-        $user = User::create([
+        $user = Apartment_Owner::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        $data['token'] = $user->createToken('mobile', ['role:user'])->plainTextToken;
+        $data['token'] = $user->createToken('mobile',['role:owner'])->plainTextToken;
         $data['name'] = $user->name;
         $data['email'] = $user->email;
 
@@ -52,9 +53,9 @@ class AuthController extends Controller
             return ApiResponse::sendResponse(422, 'Login Validation Errors', $validator->errors());
         }
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $user = Auth::user();
-            $data['token'] =  $user->createToken('mobile', ['role:user'])->plainTextToken;
+        if (Auth::guard('owner')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::guard('owner')->user();
+            $data['token'] =  $user->createToken('mobile',['role:owner'])->plainTextToken;
             $data['name'] =  $user->name;
             $data['email'] =  $user->email;
             return ApiResponse::sendResponse(200, 'Login Successfully', $data);

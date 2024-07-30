@@ -11,10 +11,10 @@ public function create( $request)
 {
 
     try {
-           
-        $news_type=Apartment::create($request->all());
+        $news_type= auth()->user()->Apartment()->create($request->all());
+       
         
-        return  ApiResponse::sendResponse(201, 'create sucess');
+        return  ApiResponse::sendResponse(201, 'create sucess',$news_type);
     }
     catch (Exception $e) {
         return    ApiResponse::sendResponse(401,$e->getMessage());
@@ -22,22 +22,23 @@ public function create( $request)
 }
 public function update($id,$request){
     try {
-           
-        $news_type=Apartment::find($id)->update($request->all());
+        $news_type= auth()->user()->Apartment()->find($id)->update($request->all());
+      
         
-        return  ApiResponse::sendResponse(201, 'update  sucess');
+        return  ApiResponse::sendResponse(201, 'update  sucess',$news_type);
     }
     catch (Exception $e) {
         return    ApiResponse::sendResponse(401,$e->getMessage());
     }
 }
 public function index(){
-
+    $news_type= auth()->user()->Apartment()->get();
+    return   ApiResponse::sendResponse(201, 'all data   sucess',$news_type);
 }
 public function delete($id){
     try {
-           
-        $news_type=Apartment::find($id)->delete();
+       
+        $news_type= auth()->user()->Apartment()->find($id)->delete();
         
         return  ApiResponse::sendResponse(201, 'delete  sucess');
     }

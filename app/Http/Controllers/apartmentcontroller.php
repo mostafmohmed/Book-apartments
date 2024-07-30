@@ -22,4 +22,7 @@ class apartmentcontroller extends Controller
     public function delete(  $id){
         return  $this->apartment->delete($id);
     }
+    function index(){
+        return  $this->apartment->index();   
+    }
 }

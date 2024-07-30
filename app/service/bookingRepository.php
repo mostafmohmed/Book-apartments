@@ -33,7 +33,8 @@ public function create( $request,$apartment)
 }
 
 public function index(){
-
+$booking=auth()->user()->book()->get();
+return    ApiResponse::sendResponse(201, 'booking',$booking);
 }
 public function delete($id){
     try {

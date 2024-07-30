@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('address');
             $table->string('phone');
             $table->integer('price');
-            
+            $table->bigInteger('ownwr_id')->unsigned();
+            $table->foreign('ownwr_id')->references('id')->on('apartment__owners')->onDelete('cascade');
           
             $table->string('details');
             $table->timestamps();
